@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 import sys
 
-
 print("Hello, World!")
-print(sys.version)
-print("Python version:", sys.version)
+
+_, *arg = sys.argv
+print(*arg)
