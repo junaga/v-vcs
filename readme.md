@@ -15,3 +15,18 @@ cp -r v-vcs/ v-vcs-minefield/
 cd v-vcs-minefield/
 v WHATEVER && git WHATEVER
 ```
+
+## todo
+
+### replace aliases from .gitconfig
+
+- `ls = status -sb`
+- `stat = log --oneline --graph --stat dev..`
+
+### implement these commands
+
+- `$ v` => (stage_commit_push)
+- maybe: `$ v status`
+- `$ v ls`
+- `$ v branch`
+- `$ v log`
