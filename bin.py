@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 from subprocess import run
+from os import system
 import click
+
+CLI_VERSION = "0.2.0"
 
 
 # relevant xkcd: https://xkcd.com/1296/
@@ -11,14 +14,34 @@ def git(args: list[str], ansi: bool = True) -> str:
     completed_process = run(command, capture_output=True)
 
     if completed_process.returncode != 0:
+        print(completed_process.stdout.decode("utf-8"))
         raise Exception(completed_process.stderr.decode("utf-8"))
     else:
         return completed_process.stdout.decode("utf-8")
 
 
 @click.command()
+def log():
+    """Show commit log"""
+    system("git log --graph --oneline")
+
+
+@click.command()
 def ls():
-    print(git(["status", "--short"]), end="")
+    """List changes"""
+    system("git status --short")
+
+
+@click.command()
+def diff():
+    system("git difftool --no-prompt --extcmd 'code --wait --diff'")
+
+
+@click.command()
+@click.argument("branch", default="--root")
+def rewrite(branch: str):
+    """Rebase HEAD onto REF. If REF is not specified, rebase onto the root commit."""
+    system("git rebase --interactive " + branch)
 
 
 def stage_commit_push(message: str):
@@ -57,7 +80,7 @@ def main(ctx: click.Context, message: str, version: bool):
 
     if ctx.invoked_subcommand is None:
         if version:
-            print("0.1.0")
+            print(CLI_VERSION)
             return
 
         stage_commit_push(message)
@@ -65,4 +88,7 @@ def main(ctx: click.Context, message: str, version: bool):
 
 if __name__ == "__main__":
     main.add_command(ls)
+    main.add_command(log)
+    main.add_command(diff)
+    main.add_command(rewrite)
     main()
