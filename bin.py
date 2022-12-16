@@ -56,7 +56,7 @@ def stage_commit_push(message: str):
         print(status[status.find(start) : status.find(end)], "\n")
 
     if message is None:
-        message = click.prompt("If applied, this commit will")
+        message = click.prompt("-m TEXT is required\nIf applied, this commit will")
 
     # stage all changes
     if not staged:
