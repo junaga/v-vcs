@@ -17,17 +17,11 @@ def git(args: list[str], ansi: bool = True) -> str:
 
 
 @click.command()
-@click.version_option("0.0.1")
-@click.option("-m", "--message", help="commit message")
+def ls():
+    print(git(["status", "--short"]), end="")
+
+
 def stage_commit_push(message: str):
-    """
-    Stage, commit, and push.
-    If there are no changes staged, stage all changes.
-    If an upstream branch is set, push commits to that branch.
-    """
-
-    # todo: pass if subcommand is given
-
     # are there already changes staged with `$ git add FILE1 FILE2`?
     staged = git(["diff", "--cached", "--name-only"], ansi=False)
 
@@ -45,10 +39,30 @@ def stage_commit_push(message: str):
     if not staged:
         git(["add", "."])
 
-    print(git(["commit", "--message", message]))
+    print(git(["commit", "--message", message]), end="")
 
 
-main = stage_commit_push
+@click.group(invoke_without_command=True)  # always run function
+@click.pass_context
+@click.option("-m", "--message", help="Commit message")
+@click.option("--version", is_flag=True, help="Show the version and exit")
+def main(ctx: click.Context, message: str, version: bool):
+    """
+    Simple git wrapper.
+
+    Stage and commit and push in one command.
+    If there are no changes staged, stage all changes.
+    Push commits if an upstream branch is set.
+    """
+
+    if ctx.invoked_subcommand is None:
+        if version:
+            print("0.1.0")
+            return
+
+        stage_commit_push(message)
+
 
 if __name__ == "__main__":
+    main.add_command(ls)
     main()
