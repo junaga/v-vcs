@@ -71,7 +71,7 @@ def stage_commit_push(message: str):
 @click.option("--version", is_flag=True, help="Show the version and exit")
 def main(ctx: click.Context, message: str, version: bool):
     """
-    Simple git wrapper.
+    Simple git wrapper
 
     Stage and commit and push in one command.
     If there are no changes staged, stage all changes.
