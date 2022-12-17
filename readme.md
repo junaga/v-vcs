@@ -16,17 +16,36 @@ cd v-vcs-minefield/
 v WHATEVER && git WHATEVER
 ```
 
-## todo
+## Implemented
+
+```sh
+Usage: v [OPTIONS] COMMAND [ARGS]...
+
+  Simple git wrapper
+
+  Stage and commit and push in one command. If there are no changes staged,
+  stage all changes. Push commits if an upstream branch is set.
+
+Options:
+  -d, --directory TEXT  Run in this directory
+  -m, --message TEXT    Commit message
+  --version             Show the version and exit
+  --help                Show this message and exit.
+
+Commands:
+  diff
+  log      Show commit log
+  ls       List changes
+  rewrite  Rebase HEAD onto REF.
+```
+
+## NotImplemented
 
 ### replace aliases from .gitconfig
 
-- `ls = status -sb`
 - `stat = log --oneline --graph --stat dev..`
 
 ### implement these commands
 
-- `$ v` => (stage_commit_push)
-- maybe: `$ v status`
-- `$ v ls`
+- `$ v status` (maybe)
 - `$ v branch`
-- `$ v log`
