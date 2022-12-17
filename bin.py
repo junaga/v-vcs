@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from subprocess import run
-from os import system
+from os import system, chdir
 import click
 
 CLI_VERSION = "0.2.0"
@@ -67,9 +67,10 @@ def stage_commit_push(message: str):
 
 @click.group(invoke_without_command=True)  # always run function
 @click.pass_context
+@click.option("-d", "--directory", help="Run in this directory")
 @click.option("-m", "--message", help="Commit message")
 @click.option("--version", is_flag=True, help="Show the version and exit")
-def main(ctx: click.Context, message: str, version: bool):
+def main(ctx: click.Context, message: str, directory: str, version: bool = False):
     """
     Simple git wrapper
 
@@ -78,12 +79,14 @@ def main(ctx: click.Context, message: str, version: bool):
     Push commits if an upstream branch is set.
     """
 
+    if ctx.params["directory"]:
+        chdir(ctx.params["directory"])
+
     if ctx.invoked_subcommand is None:
         if version:
             print(CLI_VERSION)
-            return
-
-        stage_commit_push(message)
+        else:
+            stage_commit_push(message)
 
 
 if __name__ == "__main__":
