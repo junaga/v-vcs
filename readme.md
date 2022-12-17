@@ -41,11 +41,10 @@ Commands:
 
 ## NotImplemented
 
-### replace aliases from .gitconfig
-
-- `stat = log --oneline --graph --stat dev..`
-
-### implement these commands
-
-- `$ v status` (maybe)
-- `$ v branch`
+- replace aliases from .gitconfig
+  - `stat = log --oneline --graph --stat dev..`
+- pass on rest params to appropriate git subcommands
+- commands
+  - `$ v status` show remotes, branches, configured upstream branches, number of commits and changes.
+  - `$ v reset`
+  - `$ v branch`
