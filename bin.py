@@ -59,6 +59,8 @@ def stage_commit_push(message: str):
     # throw if no "origin" remote or upstream branch
     git(["remote", "get-url", "origin"], ansi=False)
     git(["rev-parse", "--abbrev-ref", "@{u}"], ansi=False)
+    if git(["status", "--short"]) == "":
+        raise Exception("There are no changes to commit")
 
     if message is None:
         message = click.prompt("-m TEXT is required\nIf applied, this commit will")
