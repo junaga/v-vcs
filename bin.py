@@ -12,12 +12,13 @@ def git(args: list[str], ansi: bool = True) -> str:
     command = ["git"] + color_arg + args
 
     completed_process = run(command, capture_output=True)
+    stdout = completed_process.stdout.decode("utf-8")
+    stderr = completed_process.stderr.decode("utf-8")
 
     if completed_process.returncode != 0:
-        print(completed_process.stdout.decode("utf-8"))
-        raise Exception(completed_process.stderr.decode("utf-8"))
+        raise Exception(stdout + stderr)
     else:
-        return completed_process.stdout.decode("utf-8")
+        return stdout + stderr
 
 
 @click.command()
@@ -55,14 +56,20 @@ def stage_commit_push(message: str):
         end = "\n\n"
         print(status[status.find(start) : status.find(end)], "\n")
 
+    # throw if no "origin" remote or upstream branch
+    git(["remote", "get-url", "origin"], ansi=False)
+    git(["rev-parse", "--abbrev-ref", "@{u}"], ansi=False)
+
     if message is None:
         message = click.prompt("-m TEXT is required\nIf applied, this commit will")
 
     # stage all changes
     if not staged:
-        git(["add", "."])
+        print(git(["add", "."]), end="")
 
     print(git(["commit", "--message", message]), end="")
+    print(git(["push"]), end="")
+    # print("Set an upstream branch with 'git push --set-upstream origin BRANCH'")
 
 
 @click.group(invoke_without_command=True)  # always run function
