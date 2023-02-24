@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from subprocess import run
 from os import system, chdir
 import click
@@ -36,6 +36,12 @@ def ls():
 @click.command()
 def diff():
     system("git difftool --no-prompt --extcmd 'code --wait --diff'")
+
+
+@click.command()
+def reset():
+    """Reset the working tree and index to HEAD"""
+    system("git reset --hard && git clean -df")
 
 
 @click.command()
@@ -102,5 +108,6 @@ if __name__ == "__main__":
     main.add_command(ls)
     main.add_command(log)
     main.add_command(diff)
+    main.add_command(reset)
     main.add_command(rewrite)
     main()

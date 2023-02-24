@@ -46,5 +46,5 @@ Commands:
 - pass on rest params to appropriate git subcommands
 - commands
   - `$ v status` show remotes, branches, configured upstream branches, number of commits and changes.
-  - `$ v reset`
+  - `$ v exec` run a shell command, make a commit with the command line
   - `$ v branch`
