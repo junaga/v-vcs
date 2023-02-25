@@ -23,8 +23,8 @@ Usage: v [OPTIONS] COMMAND [ARGS]...
 
   Simple git wrapper
 
-  Stage and commit and push in one command. If there are no changes staged,
-  stage all changes. Push commits if an upstream branch is set.
+  Stage and commit in one command. If there are no changes staged, stage all
+  changes.
 
 Options:
   -d, --directory TEXT  Run in this directory
@@ -36,6 +36,7 @@ Commands:
   diff
   log      Show commit log
   ls       List changes
+  reset    Reset the working tree and index to HEAD
   rewrite  Rebase HEAD onto REF.
 ```
 

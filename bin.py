@@ -51,8 +51,8 @@ def rewrite(branch: str):
     system("git rebase --interactive " + branch)
 
 
-def stage_commit_push(message: str):
-    # are there already changes staged with `$ git add FILE1 FILE2`?
+def stage_commit(message: str):
+    # are there already changes staged with `$ git add $FILE1 $FILE2`?
     staged = git(["diff", "--cached", "--name-only"], ansi=False)
 
     # print the staged info section in "git status"
@@ -62,12 +62,6 @@ def stage_commit_push(message: str):
         end = "\n\n"
         print(status[status.find(start) : status.find(end)], "\n")
 
-    # throw if no "origin" remote or upstream branch
-    git(["remote", "get-url", "origin"], ansi=False)
-    git(["rev-parse", "--abbrev-ref", "@{u}"], ansi=False)
-    if git(["status", "--short"]) == "":
-        raise Exception("There are no changes to commit")
-
     if message is None:
         message = click.prompt("-m TEXT is required\nIf applied, this commit will")
 
@@ -76,8 +70,6 @@ def stage_commit_push(message: str):
         print(git(["add", "."]), end="")
 
     print(git(["commit", "--message", message]), end="")
-    print(git(["push"]), end="")
-    # print("Set an upstream branch with 'git push --set-upstream origin BRANCH'")
 
 
 @click.group(invoke_without_command=True)  # always run function
@@ -89,9 +81,8 @@ def main(ctx: click.Context, message: str, directory: str, version: bool = False
     """
     Simple git wrapper
 
-    Stage and commit and push in one command.
+    Stage and commit in one command.
     If there are no changes staged, stage all changes.
-    Push commits if an upstream branch is set.
     """
 
     if ctx.params["directory"]:
@@ -101,7 +92,7 @@ def main(ctx: click.Context, message: str, directory: str, version: bool = False
         if version:
             print(CLI_VERSION)
         else:
-            stage_commit_push(message)
+            stage_commit(message)
 
 
 if __name__ == "__main__":
