@@ -21,10 +21,16 @@ def git(args: list[str], ansi: bool = True) -> str:
         return stdout + stderr
 
 
-@click.command()
+@click.group(invoke_without_command=True)
 def log():
     """Show commit log"""
     system("git log --graph --oneline")
+
+
+@log.command()
+def all():
+    """Show commit log for all branches"""
+    system("git log --graph --oneline --branches")
 
 
 @click.command()
