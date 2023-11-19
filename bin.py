@@ -51,6 +51,30 @@ def reset():
 
 
 @click.command()
+def fixup():
+    """
+    Stage and amend (overwrite) changes into the latest commit
+
+    If there are no changes staged, stage all changes.
+    """
+    # are there already changes staged with `$ git add $FILE1 $FILE2`?
+    staged = git(["diff", "--cached", "--name-only"], ansi=False)
+
+    # print the staged info section in "git status"
+    if staged:
+        status = git(["status"])
+        start = "Changes to be committed:"
+        end = "\n\n"
+        print(status[status.find(start) : status.find(end)], "\n")
+
+    # stage all changes
+    if not staged:
+        print(git(["add", "./"]), end="")
+
+    print(git(["commit", "--amend", "--no-edit"]), end="")
+
+
+@click.command()
 @click.argument("branch", default="--root")
 def rewrite(branch: str):
     """Rebase HEAD onto REF. If REF is not specified, rebase onto the root commit."""
