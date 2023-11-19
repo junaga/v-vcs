@@ -1,33 +1,25 @@
-1. `$ python3 --version` 3
-2. Download `./bin.py`
-3. [`sudo`] Save as `/usr/local/bin/v`
-4. [`sudo`] `$ chmod +x /usr/local/bin/v`
-5. [close, open, the terminal]
-6. `$ v --version`
-
 ## Implemented
 
 ```sh
-Usage: v [OPTIONS] COMMAND [ARGS]...
+Usage: bin.py [OPTIONS] COMMAND [ARGS]...
 
-  Simple git wrapper
+  Simple git wrapper. Stage and commit.
 
-  Stage and commit in one command. If there are no changes staged, stage all
-  changes.
+  If there are no changes staged, stage all changes.
 
 Options:
-  -d, --directory TEXT  Run in this directory
   -m, --message TEXT    Commit message
+  -d, --directory TEXT  Run in this directory
   --version             Show the version and exit
   --help                Show this message and exit.
 
 Commands:
-  diff
-  fix      Stage and amend (rewrite) latest commit
+  diff     WIP $EDITOR diff view
+  fix      Stage and amend (rewrite) last commit
   log      Show commit log
   ls       List changes
-  reset    Reset the working tree and index to HEAD
-  rewrite  Rebase HEAD onto REF.
+  reset    Delete all changes and untracked files
+  rewrite  (interactive rebase)
 ```
 
 ## NotImplemented

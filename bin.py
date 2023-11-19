@@ -3,7 +3,7 @@ from subprocess import run
 from os import system, chdir
 import click
 
-CLI_VERSION = "0.2.0"
+CLI_VERSION = "0.3.0"
 
 
 # relevant xkcd: https://xkcd.com/1296/
@@ -21,18 +21,6 @@ def git(args: list[str], ansi: bool = True) -> str:
         return stdout + stderr
 
 
-@click.group(invoke_without_command=True)
-def log():
-    """Show commit log"""
-    system("git log --graph --oneline")
-
-
-@log.command()
-def all():
-    """Show commit log for all branches"""
-    system("git log --graph --oneline --branches")
-
-
 @click.command()
 def ls():
     """List changes"""
@@ -40,20 +28,9 @@ def ls():
 
 
 @click.command()
-def diff():
-    system("git difftool --no-prompt --extcmd 'code --wait --diff'")
-
-
-@click.command()
-def reset():
-    """Reset the working tree and index to HEAD"""
-    system("git reset --hard && git clean -df")
-
-
-@click.command()
 def fix():
     """
-    Stage and amend (rewrite) latest commit
+    Stage and amend (rewrite) last commit
 
     If there are no changes staged, stage all changes.
     """
@@ -75,10 +52,34 @@ def fix():
     print(git(["commit", "--amend", "--no-edit"]), end="")
 
 
+@click.group(invoke_without_command=True)
+def log():
+    """Show commit log"""
+    system("git log --graph --oneline")
+
+
+@log.command()
+def all():
+    """Show commit log for all branches"""
+    system("git log --graph --oneline --branches")
+
+
+@click.command()
+def diff():
+    """WIP $EDITOR diff view"""
+    system("git difftool --no-prompt --extcmd 'code --diff'")
+
+
+@click.command()
+def reset():
+    """Delete all changes and untracked files"""
+    system("git reset --hard HEAD && git clean --force -d")
+
+
 @click.command()
 @click.argument("branch", default="--root")
 def rewrite(branch: str):
-    """Rebase HEAD onto REF. If REF is not specified, rebase onto the root commit."""
+    """(interactive rebase)"""
     system("git rebase --interactive " + branch)
 
 
@@ -93,8 +94,16 @@ def stage_commit(message: str):
         end = "\n\n"
         print(status[status.find(start) : status.find(end)], "\n")
 
-    if message is None:
+    stdin = click.get_text_stream("stdin").read()
+
+    if stdin and message:
+        raise Exception("Error: Commmit message set twice, by `/dev/stdin` and `-m`.")
+
+    if stdin is None and message is None:
         message = click.prompt("-m TEXT is required\nIf applied, this commit will")
+
+    if stdin:
+        message = stdin
 
     # stage all changes
     if not staged:
@@ -105,14 +114,13 @@ def stage_commit(message: str):
 
 @click.group(invoke_without_command=True)  # always run function
 @click.pass_context
-@click.option("-d", "--directory", help="Run in this directory")
 @click.option("-m", "--message", help="Commit message")
+@click.option("-d", "--directory", help="Run in this directory")
 @click.option("--version", is_flag=True, help="Show the version and exit")
 def main(ctx: click.Context, message: str, directory: str, version: bool = False):
     """
-    Simple git wrapper
+    Simple git wrapper. Stage and commit.
 
-    Stage and commit in one command.
     If there are no changes staged, stage all changes.
     """
 
@@ -127,10 +135,10 @@ def main(ctx: click.Context, message: str, directory: str, version: bool = False
 
 
 if __name__ == "__main__":
-    main.add_command(ls)
     main.add_command(log)
     main.add_command(diff)
     main.add_command(reset)
     main.add_command(rewrite)
     main.add_command(fix)
+    main.add_command(ls)
     main()
