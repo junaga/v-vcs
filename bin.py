@@ -53,7 +53,7 @@ def reset():
 @click.command()
 def fix():
     """
-    Stage and amend (overwrite) changes into the latest commit
+    Stage and amend (rewrite) latest commit
 
     If there are no changes staged, stage all changes.
     """
