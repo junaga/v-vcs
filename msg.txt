@@ -1,9 +1,0 @@
-# Similar to conventional commits, I have my own set of commit verbs/types.
-new
-add
-mod
-
-fix
-fmt
-
-del
