@@ -51,13 +51,14 @@ def reset():
 
 
 @click.command()
-def fixup():
+def fix():
     """
     Stage and amend (overwrite) changes into the latest commit
 
     If there are no changes staged, stage all changes.
     """
-    # are there already changes staged with `$ git add $FILE1 $FILE2`?
+
+    # are changes staged - `$ git add $FILE1 $FILE2`?
     staged = git(["diff", "--cached", "--name-only"], ansi=False)
 
     # print the staged info section in "git status"
@@ -131,4 +132,5 @@ if __name__ == "__main__":
     main.add_command(diff)
     main.add_command(reset)
     main.add_command(rewrite)
+    main.add_command(fix)
     main()
