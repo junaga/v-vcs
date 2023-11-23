@@ -9,6 +9,10 @@
 python3 --version
 curl --version
 
+# install depedency
+pip install click
+# TODO: remove dependency
+
 # Download the file
 url="https://raw.githubusercontent.com/junaga/v-vcs/main/bin.py"
 curl -L $url > /usr/local/bin/v
@@ -20,5 +24,5 @@ chmod +x /usr/local/bin/v
 v --version
 
 # on some systems $PATH is cached
-# [close, open, the terminal]
+# close, open, the terminal
 # v --version
