@@ -3,7 +3,7 @@ from subprocess import run
 from os import system, chdir
 import click
 
-CLI_VERSION = "0.3.0"
+VERSION = "0.3.1"
 
 
 # relevant xkcd: https://xkcd.com/1296/
@@ -49,7 +49,10 @@ def fix():
     if not staged:
         print(git(["add", "./"]), end="")
 
-    print(git(["commit", "--amend", "--no-edit"]), end="")
+    # `--amend` squash changes into HEAD commit
+    # `--reset-author` reset: name, email, date
+    # `--no-edit` reuse: commit message
+    print(git(["commit", "--amend", "--reset-author", "--no-edit"]), end="")
 
 
 @click.group(invoke_without_command=True)
@@ -80,6 +83,7 @@ def reset():
 @click.argument("branch", default="--root")
 def rewrite(branch: str):
     """(interactive rebase)"""
+    # TODO: `--update-refs`
     system("git rebase --interactive " + branch)
 
 
@@ -129,7 +133,7 @@ def main(ctx: click.Context, message: str, directory: str, version: bool = False
 
     if ctx.invoked_subcommand is None:
         if version:
-            print(CLI_VERSION)
+            print(VERSION)
         else:
             stage_commit(message)
 
