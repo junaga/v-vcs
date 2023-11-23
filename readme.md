@@ -1,7 +1,7 @@
-## Implemented
+## `v --help`
 
-```sh
-Usage: bin.py [OPTIONS] COMMAND [ARGS]...
+```ini
+Usage: v [OPTIONS] [COMMAND] [ARGS]...
 
   Simple git wrapper. Stage and commit.
 
